@@ -1,0 +1,29 @@
+[
+    {
+        "name":"Plantation",
+        "type":"Liquor",
+        "img":"",
+        "liquorType":"Light Rum",
+        "volume":36,
+        "price":36,
+        "inStock":true
+    },
+    {
+        "name":"Lime",
+        "type":"other",
+        "img":"",
+        "liquorType":"",
+        "volume":36,
+        "price":36,
+        "inStock":false
+    },
+    {
+        "name":"Plantation",
+        "type":"Liquor",
+        "img":"",
+        "liquorType":"Light Rum",
+        "volume":36,
+        "price":36,
+        "inStock":true
+    }
+]

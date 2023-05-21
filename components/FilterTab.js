@@ -80,7 +80,7 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
 
 const styles = StyleSheet.create({
     searchBar: {
-      width: 300
+      width: 300,
     },
     checkbox: {
       backgroundColor: 'transparent',

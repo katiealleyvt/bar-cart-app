@@ -14,7 +14,6 @@ export default function Ingredient(props) {
     <Card containerStyle={styles.card}>
       
         <View style={{alignItems: 'flex-end'}}>
-          <Badge value={ props.stock ? "In Stock":"Out of Stock"} status={ props.stock ? "success" : "error"}/>
         </View>
 
       <View style={styles.row}>

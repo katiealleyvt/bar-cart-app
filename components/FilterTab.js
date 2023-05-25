@@ -1,8 +1,8 @@
 
 import * as SQLite from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Touchable } from 'react-native';
-import { Card, ListItem, Icon, Badge, Header, SearchBar, CheckBox, BottomSheet } from 'react-native-elements';
+import { SafeAreaView, StyleSheet, Text, View, TextInput,  TouchableOpacity, Touchable } from 'react-native';
+import { Card, ListItem, Icon, Badge, Header, SearchBar, CheckBox, BottomSheet, Button } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
 import { Link, useRouter } from 'expo-router' ;
 
@@ -52,10 +52,14 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
       showCancel
       round
       />
-      <Button title="..." onPress={() => (setSettingShow(true))} disabled={!showSettingsIcon}/>
+      <Button title="..." type="clear" onPress={() => (setSettingShow(true))} disabled={!showSettingsIcon}/>
       </View>
       
-      <View style={{alignItems: 'flex-end'}}>
+      <View style={styles.addContainer}>
+        <Button
+         title="Add" 
+         buttonStyle={styles.addButton}
+         />
         <CheckBox 
         title="In Stock" 
         checked={inStock}
@@ -91,5 +95,16 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+    },
+    addContainer: {
+      flexDirection: 'row',
+    },
+    addButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 5,
+      marginVertical: 10,
+      marginHorizontal: 10,
+      width: '90%'
     }
 });

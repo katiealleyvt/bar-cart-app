@@ -1,7 +1,7 @@
 
 import * as SQLite from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView, ImageBackground, StyleSheet, Image, Text, View, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { Card, ListItem, Icon, Badge, SearchBar } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
 import { Link, useRouter } from 'expo-router' ;
@@ -44,10 +44,18 @@ export default function LiquorCabinet() {
     
   }
   return (
-      
-      <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+    <ImageBackground source={require('../assets/Background.png')} style={styles.background}>
+    <View style={styles.topDesign}>
+      <Image source={require('../assets/Leaves.png')} style={styles.leaves} />
+      <Image source={require('../assets/Logo.png')} style={styles.logo} />
+      </View>
+    
+    </ImageBackground>
+      <SafeAreaView>
+        
         <FilterTab filterData={filterData} sortInStock={sortInStock} showSettingsIcon={false}/>
-        <ScrollView>
+        <ScrollView style={styles.scrollView}>
           {sorted.map((item, index) => (
             <Ingredient 
             key={index} 
@@ -62,14 +70,19 @@ export default function LiquorCabinet() {
       <View style={styles.bottom}>
         <PageTab style={styles.pagetab}/>
       </View>
+        
     </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#201e1f'
+  },
+  scrollView: {
+    top: 100
   },
   bottom: {
     position: 'absolute',
@@ -78,5 +91,25 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#fff',
     height: 100
+  },
+  background: {
+    flex: 1,
+    resizeMode: 'cover'
+  },
+  topDesign: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  leaves: {
+    width: '100%',
+    height: 150
+    
+  },
+  logo: {
+    width: 60,
+    height: 90,
+    position: 'absolute',
+    top: 50
   }
 });

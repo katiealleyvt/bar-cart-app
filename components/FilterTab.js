@@ -43,16 +43,17 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
   return (
     <View>
       <View style={styles.searchContainer}>
-      <SearchBar 
-      placeholder="Search Here..." 
+      <SearchBar  
       onChangeText={updateSearch} 
       value={search}
       lightTheme
       containerStyle={styles.searchBar}
+      inputContainerStyle={styles.searchInputContainer}
+      inputStyle={styles.searchInput}
       showCancel
       round
       />
-      <Button title="..." type="clear" onPress={() => (setSettingShow(true))} disabled={!showSettingsIcon}/>
+     
       </View>
       
       <View style={styles.addContainer}>
@@ -61,10 +62,12 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
          buttonStyle={styles.addButton}
          />
         <CheckBox 
-        title="In Stock" 
+        title="In Stock Only" 
         checked={inStock}
         onPress={updateInStock}
         containerStyle={styles.checkbox}
+        textStyle={styles.checkboxText}
+        iconRight
         />
       </View>
 
@@ -84,20 +87,39 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
 
 const styles = StyleSheet.create({
     searchBar: {
-      width: 300,
+      width: '100%',
+      backgroundColor: 'transparent',
+      position: 'absolute',
+      top: 100,
+      border: 'none'
     },
     checkbox: {
       backgroundColor: 'transparent',
       border: 'none',
       borderWidth: 0
     },
+    checkboxText: {
+      fontFamily: 'Indivisible',
+      fontWeight: 'bold',
+      color: '#FFFFFF'
+    },
     searchContainer: {
       flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        border: 'none',
+    },
+    searchInputContainer: {
+      backgroundColor: '#FFFFFF',
+      width: '100%',
+      height: 20,
+      border: 'none'
+    },
+    searchInput: {
     },
     addContainer: {
       flexDirection: 'row',
+      border: 'none'
     },
     addButton: {
       paddingVertical: 10,
@@ -105,6 +127,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       marginVertical: 10,
       marginHorizontal: 10,
-      width: '90%'
+      width: '90%',
+      
     }
 });

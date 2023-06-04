@@ -13,13 +13,6 @@ export default function CocktailMenu() {
 
   return (
     <View style={styles.container}>
-    <ImageBackground source={require('../assets/Background.png')} style={styles.background}>
-    <View style={styles.topDesign}>
-      <Image source={require('../assets/Leaves.png')} style={styles.leaves} />
-      <Image source={require('../assets/Logo.png')} style={styles.logo} />
-      </View>
-    
-    </ImageBackground>
     </View>
     
   );

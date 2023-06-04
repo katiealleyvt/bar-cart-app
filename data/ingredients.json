@@ -1,38 +1,12 @@
 [
     {
         "name":"Plantation",
+        "description": "Light Rum",
         "type":"Liquor",
         "img":"",
-        "liquorType":"Light Rum",
-        "volume":750,
+        "quantity":750,
+        "unit": "mL",
         "price":19.99,
-        "inStock":true
-    },
-    {
-        "name":"Lime",
-        "type":"other",
-        "img":"",
-        "liquorType":"",
-        "volume":0,
-        "price":1,
-        "inStock":true
-    },
-    {
-        "name":"Ketel One",
-        "type":"Liquor",
-        "img":"",
-        "liquorType":"Vodka",
-        "volume":750,
-        "price":22.99,
-        "inStock":false
-    },
-    {
-        "name":"Lemon",
-        "type":"other",
-        "img":"",
-        "liquorType":"",
-        "volume":0,
-        "price":1,
         "inStock":true
     }
 ]

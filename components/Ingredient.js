@@ -9,7 +9,7 @@ import { Link, useRouter } from 'expo-router' ;
 export default function Ingredient(props) {
 
   let inStock = props.stock ? "In Stock" : "Out of Stock";
-
+  const perUnitCost = (props.price / (props.volume *.033814)).toFixed(2);
   return (
     <Card containerStyle={styles.card}>
       
@@ -24,10 +24,11 @@ export default function Ingredient(props) {
         </View>
 
         <View style={{marginLeft: 15}}>
-          <Text h3>{props.name}</Text>
-          <Text>&bull;Type: {props.type}</Text>
-          <Text>&bull;Volume: {props.volume}</Text>
-          <Text>&bull;Price: ${props.price}</Text>
+          <Text h4 style={{fontWeight: 'bold',}}>{props.name}</Text>
+          <Text style={styles.cardText}>Type: {props.type === 'Liquor' ? props.liquorType : props.type}</Text>
+          {props.type === 'Liquor' && <Text style={styles.cardText}>Volume: {props.volume} mL</Text>}
+          <Text style={styles.cardText}>Price: ${props.price}</Text>
+          {props.type === 'Liquor' && <Text style={styles.cardText}>Per unit cost: ${perUnitCost}</Text>}
         </View>
       </View>
        
@@ -39,10 +40,17 @@ export default function Ingredient(props) {
 const styles = StyleSheet.create({
   image: {
     width: 100,
-    height: 100,
+    height: '100%',
+    borderRadius: 15
   },
   card: {
-    height: 175
+    height: 145,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    padding: 0
+  },
+  cardText: {
+    fontSize: 18
   },
   row: {
     flexDirection: 'row',

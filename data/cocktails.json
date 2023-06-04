@@ -1,0 +1,37 @@
+[
+    {
+        "name":"Plantation",
+        "description":"Liquor",
+        "category":"Rum",
+        "quantity":45,
+        "unit":750,
+        "price":19.99
+    },
+    {
+        "name":"Lime",
+        "type":"other",
+        "img":"",
+        "liquorType":"",
+        "volume":0,
+        "price":1,
+        "inStock":true
+    },
+    {
+        "name":"Ketel One",
+        "type":"Liquor",
+        "img":"",
+        "liquorType":"Vodka",
+        "volume":750,
+        "price":22.99,
+        "inStock":false
+    },
+    {
+        "name":"Lemon",
+        "type":"other",
+        "img":"",
+        "liquorType":"",
+        "volume":0,
+        "price":1,
+        "inStock":true
+    }
+]

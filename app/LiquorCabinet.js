@@ -8,6 +8,7 @@ import { Link, useRouter } from 'expo-router' ;
 import Ingredient from '../components/Ingredient';
 import PageTab from '../components/PageTab';
 import FilterTab from '../components/FilterTab';
+import Form from './IngredientForm';
 
 export default function LiquorCabinet() {
 
@@ -15,6 +16,8 @@ export default function LiquorCabinet() {
 
   const [ingredients, setIngredients] = React.useState(jsonData)
   const [sorted, setSorted] = React.useState(jsonData);
+  
+  const [showForm, setShowForm] = useState(true);
 
   const filterData = (search) => {
     //filter by search
@@ -44,35 +47,30 @@ export default function LiquorCabinet() {
     
   }
   return (
-    <View style={styles.container}>
-    <ImageBackground source={require('../assets/Background.png')} style={styles.background}>
-    <View style={styles.topDesign}>
-      <Image source={require('../assets/Leaves.png')} style={styles.leaves} />
-      <Image source={require('../assets/Logo.png')} style={styles.logo} />
-      </View>
-    
-    </ImageBackground>
       <SafeAreaView>
-        
-        <FilterTab filterData={filterData} sortInStock={sortInStock} showSettingsIcon={false}/>
+        {showForm ? 
+        <Form /> : 
+        <View>
+          <FilterTab filterData={filterData} sortInStock={sortInStock} showSettingsIcon={false}/>
         <ScrollView style={styles.scrollView}>
           {sorted.map((item, index) => (
             <Ingredient 
             key={index} 
             name={item.name} 
-            type={item.liquorType != "" ? item.liquorType: item.type} 
+            type={item.type} 
+            liquorType={item.liquorType}
             volume={item.volume} 
             price={item.price}
             stock={item.inStock}
             />
+            
       ))}
         </ScrollView>
-      <View style={styles.bottom}>
-        <PageTab style={styles.pagetab}/>
-      </View>
+          </View>}
+        
+      
         
     </SafeAreaView>
-    </View>
   );
 }
 
@@ -83,14 +81,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     top: 100
-  },
-  bottom: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    height: 100
   },
   background: {
     flex: 1,

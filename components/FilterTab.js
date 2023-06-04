@@ -1,7 +1,7 @@
 
 import * as SQLite from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, TextInput,  TouchableOpacity, Touchable } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput,  TouchableOpacity, TouchableHighlight, Pressable, Touchable } from 'react-native';
 import { Card, ListItem, Icon, Badge, Header, SearchBar, CheckBox, BottomSheet, Button } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
 import { Link, useRouter } from 'expo-router' ;
@@ -57,10 +57,9 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
       </View>
       
       <View style={styles.addContainer}>
-        <Button
-         title="Add" 
-         buttonStyle={styles.addButton}
-         />
+         <Pressable style={styles.addButton}>
+          <Image source={require('../assets/Add_icon.png')} style={{resizeMode: 'center', alignSelf: 'center', bottom: 5, width: 30, height: 30}}/>
+         </Pressable>
         <CheckBox 
         title="In Stock Only" 
         checked={inStock}
@@ -68,6 +67,8 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
         containerStyle={styles.checkbox}
         textStyle={styles.checkboxText}
         iconRight
+        checkedIcon={<Image style={styles.checkboxIcon} source={require('../assets/Checkbox_checked.png')} />}
+        uncheckedIcon={<Image style={styles.checkboxIcon} source={require('../assets/Checkbox_unchecked.png')} />}
         />
       </View>
 
@@ -91,43 +92,54 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent',
       position: 'absolute',
       top: 100,
-      border: 'none'
+      border: 'none',
     },
     checkbox: {
       backgroundColor: 'transparent',
       border: 'none',
-      borderWidth: 0
+      borderWidth: 0,
+      marginHorizontal: 0,
+      paddingHorizontal: 0
     },
     checkboxText: {
       fontFamily: 'Indivisible',
       fontWeight: 'bold',
       color: '#FFFFFF'
     },
+    checkboxIcon: {
+      resizeMode: 'contain',
+      width: 22
+    },
     searchContainer: {
       flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
         border: 'none',
+      
     },
     searchInputContainer: {
       backgroundColor: '#FFFFFF',
       width: '100%',
-      height: 20,
-      border: 'none'
+      height: 30,
+      border: 'none',
     },
     searchInput: {
     },
     addContainer: {
       flexDirection: 'row',
-      border: 'none'
+      border: 'none',
+      top: 125,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     addButton: {
       paddingVertical: 10,
       paddingHorizontal: 20,
-      borderRadius: 5,
       marginVertical: 10,
       marginHorizontal: 10,
-      width: '90%',
-      
+      borderRadius: 5,
+      width: 200,
+      height: 40,
+      backgroundColor: '#FFFFFF'
     }
 });

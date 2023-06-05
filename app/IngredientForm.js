@@ -4,18 +4,19 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View, TextInput,  Image, TouchableOpacity, Touchable } from 'react-native';
 import { Card, ListItem, Icon, Badge, Header, Button } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
-import { Link, useRouter } from 'expo-router' ;
-
+import { Link, useRouter } from 'expo-router';
+import { Dropdown } from 'react-native-element-dropdown';
+import { ListItemBase } from 'react-native-elements/dist/list/ListItemBase';
 
 
 export default function IngredientForm() {
 
   const [categories, setCategories] = useState([
-    {label: "Liquor", value:"liquor"},
-    {label: "Syrups", value:"syrup"},
-    {label: "Soda/Juices", value:"soda/juice"},
-    {label: "Fruit", value:"fruit"},
-    {label: "Other", value:"other"}
+    {label: "Liquor", value:"liquor", unit:"ml"},
+    {label: "Syrup", value:"syrup", unit:"fl oz"},
+    {label: "Soda/Juice", value:"soda/juice", unit:"fl oz"},
+    {label: "Fruit", value:"fruit", unit: "fruit"},
+    {label: "Other", value:"other", unit:"custom"}
   ]);
 
   const [name, setName] = useState('');
@@ -25,7 +26,6 @@ export default function IngredientForm() {
   const [unit, setUnit] = useState('');
   const [price, setPrice] = useState('');
 
-  const [dropdownOpen, setOpen] = useState(false);
 
 
   const handleSubmit = () => {
@@ -36,8 +36,15 @@ export default function IngredientForm() {
 
   }
 
-  const changeCategory = () => {
-
+  const changeCategory = (item) => {
+    setCategory(item.value);
+    if(item.value == "other"){
+      setUnit("");
+    }
+    else{
+      setUnit(item.unit);
+    }
+    
   }
 
   return (
@@ -63,6 +70,17 @@ export default function IngredientForm() {
         <View style={{flexDirection: 'row'}}>
           <View>
             <Text style={styles.label}>CATEGORY</Text>
+            <Dropdown 
+            value={category}
+            data={categories}
+            onChange={item => {changeCategory(item)}}
+            labelField="label"
+            valueField="value"
+            style={styles.dropdown}
+            placeholder="Select"
+            selectedTextStyle={styles.dropdownText}
+            placeholderStyle={styles.dropdownText}
+            />
           </View>
           <View>
             <Text style={styles.label}>QUANTITY</Text>
@@ -70,15 +88,17 @@ export default function IngredientForm() {
             style={styles.input}
             value={quantity}
             onChangeText={setQuantity}
+            keyboardType="numeric"
             />
           </View>
           <View>
             <Text style={styles.label}>UNIT</Text>
-            <TextInput 
+            {category == 'other' ? <TextInput 
             style={styles.input}
             value={unit}
             onChangeText={setUnit}
-            />
+            /> : <Text>{unit}</Text>}
+            
           </View>
         </View>
         <View style={{flexDirection: 'row'}}>
@@ -88,9 +108,15 @@ export default function IngredientForm() {
             style={styles.input}
             value={price}
             onChangeText={setPrice}
+            keyboardType="numeric"
             />
           </View>
-            <Button title="ADD" containerStyle={styles.btnContainer} buttonStyle={styles.addBtn} titleStyle={styles.addBtnText} onPress={handleSubmit}/>
+            <Button 
+            title="ADD" 
+            containerStyle={styles.btnContainer} 
+            buttonStyle={styles.addBtn} 
+            titleStyle={styles.addBtnText} 
+            onPress={handleSubmit}/>
           </View>
       </View>
     </View>
@@ -98,6 +124,15 @@ export default function IngredientForm() {
 }
 
 const styles = StyleSheet.create({
+  dropdown: {
+    backgroundColor: '#d8e8ed',
+    height: 40,
+    marginTop: 12
+  },
+  dropdownText: {
+    margin: 10,
+    fontSize: 15
+  },
   btnContainer: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -111,18 +146,17 @@ const styles = StyleSheet.create({
   },
   addBtnText: {
     color: 'white',
-    fontSize: '35',
+    fontSize: 35,
     fontWeight: 'bold'
   },
-  title: {
+  title: { 
     color: 'rgb(24, 119, 149)',
-    fontSize: '35',
+    fontSize: 35,
     fontWeight: 'bold',
-
   },
   label: {
     color: 'rgba(24, 119, 149, 0.7)',
-    fontSize: '20',
+    fontSize: 20,
     paddingHorizontal: 10
   },
   input: {

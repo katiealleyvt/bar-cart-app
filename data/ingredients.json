@@ -8,5 +8,15 @@
         "unit": "mL",
         "price":19.99,
         "inStock":true
+    },
+    {
+        "name":"Plantation",
+        "description": "Light Rum",
+        "type":"Liquor",
+        "img":"",
+        "quantity":750,
+        "unit": "mL",
+        "price":19.99,
+        "inStock":true
     }
 ]

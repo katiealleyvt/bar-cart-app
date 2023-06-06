@@ -11,6 +11,9 @@ import { ListItemBase } from 'react-native-elements/dist/list/ListItemBase';
 
 export default function IngredientForm() {
 
+  const fs = require('fs');
+  const jsonData = require('../data/ingredients.json');
+
   const [categories, setCategories] = useState([
     {label: "Liquor", value:"liquor", unit:"ml"},
     {label: "Syrup", value:"syrup", unit:"fl oz"},
@@ -29,10 +32,25 @@ export default function IngredientForm() {
 
 
   const handleSubmit = () => {
-
+    CreateIngredient();
   }
 
   const CreateIngredient = () => {
+    item = {
+      name: name,
+      description: description,
+      type: category,
+      img: "",
+      quantity: quantity,
+      unit: unit,
+      price: price,
+      inStock: true
+    }
+
+    jsonData.push(item);
+
+    const updatedData = JSON.stringify(jsonData, null, 2);
+
 
   }
 

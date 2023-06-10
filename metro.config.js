@@ -7,14 +7,12 @@ defaultConfig.resolver.assetExts.push('db');
 module.exports = defaultConfig;
 
 async function openDatabase(pathToDatabaseFile) {
-    const directoryExists = await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite');
-    if (!directoryExists.exists) {
-      await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
-    }
-    await FileSystem.downloadAsync(
-      Asset.fromModule(require(pathToDatabaseFile)).uri,
-      FileSystem.documentDirectory + 'SQLite/cocktaildb.db'
-    );
-    return SQLite.openDatabase('cocktaildb.db');
+  if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {
+    await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
   }
-  
+  await FileSystem.downloadAsync(
+    Asset.fromModule(require(pathToDatabaseFile)).uri,
+    FileSystem.documentDirectory + 'SQLite/barcart.db'
+  );
+  return SQLite.openDatabase('barcart.db');
+}

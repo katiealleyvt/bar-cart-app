@@ -12,13 +12,54 @@ import Form from './IngredientForm';
 
 export default function LiquorCabinet() {
 
-  const jsonData = require('../data/ingredients.json');
+  useEffect(() => {
+    // Fetch ingredients from the database
+    const db = SQLite.openDatabase('barCart.db');
 
-  const [ingredients, setIngredients] = React.useState(jsonData)
-  const [sorted, setSorted] = React.useState(jsonData);
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM ingredients',
+        [],
+        (txObj, resultSet) => {
+          const data = [];
+
+          for (let i = 0; i < resultSet.rows.length; i++) {
+            const row = resultSet.rows.item(i);
+            // Transform the row data into the required format for your component
+            const ingredient = {
+              name: row.name,
+              type: row.type,
+              liquorType: row.type, // adjust this according to your database structure
+              volume: row.quantity, // adjust this according to your database structure
+              price: row.price,
+              inStock: row.inStock === 1 ? true : false
+            };
+            data.push(ingredient);
+          }
+
+          // Set the fetched ingredients in the component state
+          setIngredients(data);
+          setSorted(data);
+        },
+        (txObj, error) => {
+          console.log('Error fetching ingredients:', error);
+        }
+      );
+    });
+  }, []);
+
+  const [ingredients, setIngredients] = React.useState([])
+  const [sorted, setSorted] = React.useState([]);
   
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
 
+  const showIngredientForm = () =>
+  {
+    setShowForm(true);
+  }
+  const hideIngredientForm = () => {
+    showForm(false);
+  }
   const filterData = (search) => {
     //filter by search
     //check if checkbox is checked   //in stock not checked
@@ -49,9 +90,13 @@ export default function LiquorCabinet() {
   return (
       <SafeAreaView>
         {showForm ? 
-        <Form /> : 
+        <Form hideIngredientForm={hideIngredientForm}/> : 
         <View>
-          <FilterTab filterData={filterData} sortInStock={sortInStock} showSettingsIcon={false}/>
+          <FilterTab 
+          filterData={filterData} 
+          sortInStock={sortInStock} 
+          showSettingsIcon={false}
+          showIngredientForm={showIngredientForm}/>
         <ScrollView style={styles.scrollView}>
           {sorted.map((item, index) => (
             <Ingredient 

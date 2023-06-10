@@ -11,17 +11,19 @@ import PageTab from '../components/PageTab';
 import FilterTab from '../components/FilterTab';
 import LiquorCabinet from './LiquorCabinet';
 import CocktailMenu from './CocktailMenu';
-
-export default function HomeLayout() {
-  return (
-    <>
-      <View style={styles.container}>
-    <ImageBackground source={require('../assets/Background.png')} style={styles.background}>
+/*
+<ImageBackground source={require('../assets/Background.png')} style={styles.background}>
     <View style={styles.topDesign}>
       <Image source={require('../assets/Leaves.png')} style={styles.leaves} />
       <Image source={require('../assets/Logo.png')} style={styles.logo} />
       </View>
     </ImageBackground>
+    */
+export default function HomeLayout() {
+  return (
+    <>
+      <View style={styles.container}>
+    
     <SafeAreaView>
     <Slot />
     </SafeAreaView>

@@ -8,7 +8,7 @@ import { Link, useRouter } from 'expo-router' ;
 
 
 
-export default function FilterTab({ filterData, sortInStock, showSettingsIcon }) {
+export default function FilterTab({ filterData, sortInStock, showSettingsIcon, showIngredientForm }) {
 
   const [search, setSearch] = React.useState("");
   const [inStock, setInStock] = React.useState(false);
@@ -57,7 +57,7 @@ export default function FilterTab({ filterData, sortInStock, showSettingsIcon })
       </View>
       
       <View style={styles.addContainer}>
-         <Pressable style={styles.addButton}>
+         <Pressable style={styles.addButton} onPress={showIngredientForm}>
           <Image source={require('../assets/Add_icon.png')} style={{resizeMode: 'center', alignSelf: 'center', bottom: 5, width: 30, height: 30}}/>
          </Pressable>
         <CheckBox 

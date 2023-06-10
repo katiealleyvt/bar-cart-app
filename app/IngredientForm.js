@@ -11,8 +11,78 @@ import { ListItemBase } from 'react-native-elements/dist/list/ListItemBase';
 
 export default function IngredientForm() {
 
-  const fs = require('fs');
-  const jsonData = require('../data/ingredients.json');
+  const addIngredient = (ingredient) => {
+    const db = SQLite.openDatabase('barCart.db');
+  
+    db.transaction((tx) => {
+      // Check if the ingredients table exists
+      tx.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='ingredients'",
+        [],
+        (txObj, resultSet) => {
+          if (resultSet.rows.length === 0) {
+            // The ingredients table doesn't exist, create it
+            tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, type TEXT, img TEXT, quantity INTEGER, unit TEXT, price REAL, inStock INTEGER)',
+              [],
+              (txObj, resultSet) => {
+                // Table created successfully, now insert the ingredient
+                insertIngredient(tx, ingredient);
+              },
+              (txObj, error) => {
+                console.log('Error creating ingredients table:', error);
+              }
+            );
+          } else {
+            // The ingredients table already exists, directly insert the ingredient
+            insertIngredient(tx, ingredient);
+          }
+        },
+        (txObj, error) => {
+          console.log('Error checking ingredients table:', error);
+        }
+      );
+    });
+  };
+  
+  const insertIngredient = (tx, ingredient) => {
+    tx.executeSql(
+      'INSERT INTO ingredients (name, description, type, img, quantity, unit, price, inStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        ingredient.name,
+        ingredient.description,
+        ingredient.category,
+        '', // no image
+        ingredient.quantity,
+        ingredient.unit,
+        ingredient.price,
+        1 // inStock = true
+      ],
+      (txObj, resultSet) => {
+        // Handle the success case if needed
+        console.log('Ingredient added to the database');
+      },
+      (txObj, error) => {
+        // Handle the error case if needed
+        console.log('Error adding ingredient to the database:', error);
+      }
+    );
+  };
+  
+  const handleSubmit = () => {
+    const ingredient = {
+      name: name,
+      description: description,
+      category: category,
+      quantity: quantity,
+      unit: unit,
+      price: price,
+      inStock: true,
+    };
+  
+    addIngredient(ingredient);
+  };
+
 
   const [categories, setCategories] = useState([
     {label: "Liquor", value:"liquor", unit:"ml"},
@@ -31,28 +101,7 @@ export default function IngredientForm() {
 
 
 
-  const handleSubmit = () => {
-    CreateIngredient();
-  }
 
-  const CreateIngredient = () => {
-    item = {
-      name: name,
-      description: description,
-      type: category,
-      img: "",
-      quantity: quantity,
-      unit: unit,
-      price: price,
-      inStock: true
-    }
-
-    jsonData.push(item);
-
-    const updatedData = JSON.stringify(jsonData, null, 2);
-
-
-  }
 
   const changeCategory = (item) => {
     setCategory(item.value);
@@ -141,6 +190,8 @@ export default function IngredientForm() {
   );
 }
 
+
+
 const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: '#d8e8ed',
@@ -190,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignContent: 'center',
-    bottom: 400,
+    bottom: -300,
     left: 0,
     right: 0,
   },
@@ -198,7 +249,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#FFFFFF',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 500,
     shadowColor: '#000',

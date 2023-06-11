@@ -11,7 +11,7 @@ import FilterTab from '../components/FilterTab';
 import Form from './IngredientForm';
 
 export default function LiquorCabinet() {
-
+//Get Ingredients from Db
   useEffect(() => {
     // Fetch ingredients from the database
     const db = SQLite.openDatabase('barCart.db');
@@ -27,6 +27,7 @@ export default function LiquorCabinet() {
             const row = resultSet.rows.item(i);
             // Transform the row data into the required format for your component
             const ingredient = {
+              id: row.id,
               name: row.name,
               type: row.type,
               liquorType: row.type, // adjust this according to your database structure
@@ -48,11 +49,32 @@ export default function LiquorCabinet() {
     });
   }, []);
 
+//Update Ingredients from Db
+
+//mark inStock or OutofStock
+const markStock = (inStock, id) => {
+  const db = SQLite.openDatabase('barCart.db');
+
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE ingredients SET inStock = ? WHERE id = ?',
+      [inStock ? 1 : 0, id],
+      (txObj, resultSet) => {
+        console.log('Ingredient stock updated successfully');
+      },
+      (txObj, error) => {
+        console.log('Error updating ingredient stock:', error);
+      }
+    );
+  });
+};
+
+  //States
   const [ingredients, setIngredients] = React.useState([])
   const [sorted, setSorted] = React.useState([]);
-  
   const [showForm, setShowForm] = useState(false);
 
+  //Show / Hide Ingredients
   const showIngredientForm = () =>
   {
     setShowForm(true);
@@ -60,6 +82,7 @@ export default function LiquorCabinet() {
   const hideIngredientForm = () => {
     showForm(false);
   }
+  //Filter data for search
   const filterData = (search) => {
     //filter by search
     //check if checkbox is checked   //in stock not checked
@@ -74,7 +97,7 @@ export default function LiquorCabinet() {
     
     setSorted(filteredData);
   }
-
+//Sort for in stock
   const sortInStock = (checked) => {
     if(checked){
       const inStockData = ingredients.filter((item) => item.inStock);
@@ -87,6 +110,8 @@ export default function LiquorCabinet() {
     }
     
   }
+
+
   return (
       <SafeAreaView>
         {showForm ? 
@@ -100,16 +125,19 @@ export default function LiquorCabinet() {
         <ScrollView style={styles.scrollView}>
           {sorted.map((item, index) => (
             <Ingredient 
-            key={index} 
+            key={index}
+            id={item.id}
             name={item.name} 
             type={item.type} 
             liquorType={item.liquorType}
             volume={item.volume} 
             price={item.price}
             stock={item.inStock}
+            markStock={markStock}
             />
             
       ))}
+        <View style={{height: 620, backgroundColor: '#201e1f'}}></View>
         </ScrollView>
           </View>}
         

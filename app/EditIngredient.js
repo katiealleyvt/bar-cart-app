@@ -4,74 +4,45 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View, TextInput,  Image, TouchableOpacity, Touchable } from 'react-native';
 import { Card, ListItem, Icon, Badge, Header, Button } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Link, useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { Dropdown } from 'react-native-element-dropdown';
 import { ListItemBase } from 'react-native-elements/dist/list/ListItemBase';
 
 
-export default function IngredientForm() {
+export default function EditIngredient(props) {
 
+  
+  const [imageUri, setImageUri] = useState(null);
   const navigation = useNavigation();
+  const route = useRoute();
+  const ingredientId = route.params?.ingredientId;
+  console.log(ingredientId)
 
-  const addIngredient = (ingredient) => {
-    const db = SQLite.openDatabase('barCart.db');
+  const handleImageSelect = async () => {
+    // Ask for permission to access the device's media library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   
-    db.transaction((tx) => {
-      // Check if the ingredients table exists
-      tx.executeSql(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='ingredients'",
-        [],
-        (txObj, resultSet) => {
-          if (resultSet.rows.length === 0) {
-            // The ingredients table doesn't exist, create it
-            tx.executeSql(
-              'CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, type TEXT, img TEXT, quantity INTEGER, unit TEXT, price REAL, inStock INTEGER)',
-              [],
-              (txObj, resultSet) => {
-                // Table created successfully, now insert the ingredient
-                insertIngredient(tx, ingredient);
-                navigation.replace('LiquorCabinet');
-              },
-              (txObj, error) => {
-                console.log('Error creating ingredients table:', error);
-              }
-            );
-          } else {
-            // The ingredients table already exists, directly insert the ingredient
-            insertIngredient(tx, ingredient);
-          }
-        },
-        (txObj, error) => {
-          console.log('Error checking ingredients table:', error);
-        }
-      );
+    if (status !== 'granted') {
+      // Permission denied, handle accordingly
+      return;
+    }
+  
+    // Launch the image picker and allow the user to select an image
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
+  
+    if (!result.cancelled) {
+      // An image was selected
+      setImageUri(result.uri);
+    }
   };
   
-  const insertIngredient = (tx, ingredient) => {
-    tx.executeSql(
-      'INSERT INTO ingredients (name, description, type, img, quantity, unit, price, inStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        ingredient.name,
-        ingredient.description,
-        ingredient.category,
-        '', // no image
-        ingredient.quantity,
-        ingredient.unit,
-        ingredient.price,
-        1 // inStock = true
-      ],
-      (txObj, resultSet) => {
-        // Handle the success case if needed
-        console.log('Ingredient added to the database');
-      },
-      (txObj, error) => {
-        // Handle the error case if needed
-        console.log('Error adding ingredient to the database:', error);
-      }
-    );
-  };
   
   const handleSubmit = () => {
     const ingredient = {

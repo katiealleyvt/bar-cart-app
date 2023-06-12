@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
       paddingHorizontal: 0
     },
     checkboxText: {
-      fontFamily: 'Indivisible',
       fontWeight: 'bold',
       color: '#FFFFFF'
     },

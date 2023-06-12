@@ -4,19 +4,25 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, View, TextInput, Button, TouchableOpacity, Image, Pressable} from 'react-native';
 import { Card, ListItem, Icon, Badge, Text, BottomSheet } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
-import { Link, useRouter } from 'expo-router' ;
+import { Link, useNavigation, useRouter } from 'expo-router' ;
 
 export default function Ingredient(props) {
 
-  const { markStock } = props;
+  //set up
+  const { markStock, deleteIngredient, editIngredient } = props;
+  const navigation = useNavigation();
+
+  
   //Ingredient Options
   const [optionsShow, setOptionsShow] = React.useState(false);
   const stockOption = props.stock ? 'Mark Out of Stock' : 'Mark In Stock';
   const options = [
-    {title: 'Edit Item'},
+    {title: 'Edit Item',
+    onPress: () => redirectToEdit(props.id)},
     {
       title: 'Delete Item',
       titleStyle: { color: 'red', fontWeight: 'bold' },
+      onPress: () => deleteIngredient(props.id)
   },
     {
       title: stockOption,
@@ -38,12 +44,22 @@ export default function Ingredient(props) {
     titleSize = 12;
   }
 
+  
   //InStock/OutofStock show
   let inStock = props.stock ? "In Stock" : "Out of Stock";
+
+    const opacity = props.stock ? 1 : 0.5;
+
+
+  //Redirect to Edit Ingredients Form
+  redirectToEdit = (id) => {
+    navigation.navigate('EditIngredient', { ingredientId: id });
+  };
+
   //show Per Unit Cost
   const perUnitCost = (props.price / (props.volume *.033814)).toFixed(2);
   return (
-    <Card containerStyle={styles.card}>
+    <Card containerStyle={[styles.card, {backgroundColor: `rgba(255,255,255,${opacity})`}]}>
       
        
 
@@ -85,7 +101,9 @@ export default function Ingredient(props) {
   );
 }
 
+
 const styles = StyleSheet.create({
+  
   image: {
     width: 100,
     height: 130,
@@ -93,10 +111,10 @@ const styles = StyleSheet.create({
   },
   card: {
     height: 145,
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 0,
     flexDirection: "column"
+    
   },
   cardText: {
     fontSize: 18

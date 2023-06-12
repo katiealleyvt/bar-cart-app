@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ImageBackground, StyleSheet, Image, Text, View, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
 import { Card, ListItem, Icon, Badge, SearchBar } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { Link, useRouter } from 'expo-router' ;
 import Ingredient from '../components/Ingredient';
 import PageTab from '../components/PageTab';
@@ -11,6 +12,11 @@ import FilterTab from '../components/FilterTab';
 import Form from './IngredientForm';
 
 export default function LiquorCabinet() {
+
+  const router = useRouter();
+  const navigation = useNavigation();
+
+
 //Get Ingredients from Db
   useEffect(() => {
     // Fetch ingredients from the database
@@ -61,9 +67,35 @@ const markStock = (inStock, id) => {
       [inStock ? 1 : 0, id],
       (txObj, resultSet) => {
         console.log('Ingredient stock updated successfully');
+        //reload
+        navigation.replace('LiquorCabinet');
       },
       (txObj, error) => {
         console.log('Error updating ingredient stock:', error);
+      }
+    );
+  });
+
+};
+
+//delete ingredient
+const deleteIngredient = (id) => {
+  const db = SQLite.openDatabase('barCart.db');
+  db.transaction((tx) => {
+    tx.executeSql(
+      'DELETE FROM ingredients WHERE id = ?',
+      [id],
+      (txObj, resultSet) => {
+        if (resultSet.rowsAffected > 0) {
+          console.log('Ingredient removed successfully');
+          //reload
+          navigation.replace('LiquorCabinet');
+        } else {
+          console.log('Ingredient removal failed');
+        }
+      },
+      (txObj, error) => {
+        console.log('Error removing ingredient:', error);
       }
     );
   });
@@ -134,6 +166,7 @@ const markStock = (inStock, id) => {
             price={item.price}
             stock={item.inStock}
             markStock={markStock}
+            deleteIngredient={deleteIngredient}
             />
             
       ))}

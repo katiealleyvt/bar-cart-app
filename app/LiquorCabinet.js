@@ -36,9 +36,10 @@ export default function LiquorCabinet() {
               id: row.id,
               name: row.name,
               type: row.type,
-              liquorType: row.type, // adjust this according to your database structure
-              volume: row.quantity, // adjust this according to your database structure
+              description: row.description, // adjust this according to your database structure
+              quantity: row.quantity, // adjust this according to your database structure
               price: row.price,
+              unit: row.unit,
               inStock: row.inStock === 1 ? true : false
             };
             data.push(ingredient);
@@ -47,6 +48,7 @@ export default function LiquorCabinet() {
           // Set the fetched ingredients in the component state
           setIngredients(data);
           setSorted(data);
+          setSearched(data);
         },
         (txObj, error) => {
           console.log('Error fetching ingredients:', error);
@@ -103,6 +105,7 @@ const deleteIngredient = (id) => {
 
   //States
   const [ingredients, setIngredients] = React.useState([])
+  const [searched, setSearched] = React.useState([])
   const [sorted, setSorted] = React.useState([]);
   const [showForm, setShowForm] = useState(false);
 
@@ -118,27 +121,29 @@ const deleteIngredient = (id) => {
   const filterData = (search) => {
     //filter by search
     //check if checkbox is checked   //in stock not checked
-      const filteredData = jsonData.filter((item) => 
+      const filteredData = ingredients.filter((item) => 
     {
       const itemName = item.name.toLowerCase();
-      const itemType = item.liquorType.toLowerCase();
+      const itemType = item.type.toLowerCase();
+      const itemDesc = item.description.toLowerCase();
       const searchTerm = search.toLowerCase();
 
-      return itemName.includes(searchTerm) || itemType.includes(searchTerm);
+      return itemName.includes(searchTerm) || itemType.includes(searchTerm) || itemDesc.includes(searchTerm);
     });
     
     setSorted(filteredData);
+    setSearched(filteredData);
   }
 //Sort for in stock
   const sortInStock = (checked) => {
     if(checked){
-      const inStockData = ingredients.filter((item) => item.inStock);
-  const outOfStockData = ingredients.filter((item) => !item.inStock);
+      const inStockData = sorted.filter((item) => item.inStock);
+  const outOfStockData = sorted.filter((item) => !item.inStock);
       const allData = [...inStockData, ...outOfStockData];
       setSorted(allData);
     }
-    else{
-      setSorted(ingredients);
+    else{ 
+      setSorted(searched);
     }
     
   }
@@ -153,7 +158,8 @@ const deleteIngredient = (id) => {
           filterData={filterData} 
           sortInStock={sortInStock} 
           showSettingsIcon={false}
-          showIngredientForm={showIngredientForm}/>
+          showIngredientForm={showIngredientForm}
+          ingredients={ingredients}/>
         <ScrollView style={styles.scrollView}>
           {sorted.map((item, index) => (
             <Ingredient 

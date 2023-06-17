@@ -12,7 +12,10 @@ export default function Ingredient(props) {
   const { markStock, deleteIngredient, editIngredient } = props;
   const navigation = useNavigation();
 
-  
+  const handleCardPress = () => {
+    navigation.navigate('CardView', { ingredientId: props.id });
+  }
+
   //Ingredient Options
   const [optionsShow, setOptionsShow] = React.useState(false);
   const stockOption = props.stock ? 'Mark Out of Stock' : 'Mark In Stock';
@@ -53,16 +56,18 @@ export default function Ingredient(props) {
 
   //Redirect to Edit Ingredients Form
   redirectToEdit = (id) => {
+
     navigation.navigate('EditIngredient', { ingredientId: id });
   };
+
+  
 
   //show Per Unit Cost
   const perUnitCost = (props.price / (props.volume *.033814)).toFixed(2);
   return (
+    <TouchableOpacity onPress={handleCardPress}>
     <Card containerStyle={[styles.card, {backgroundColor: `rgba(255,255,255,${opacity})`}]}>
       
-       
-
       <View style={styles.row}>
         <View style={{display: 'flex', flexDirection: 'row'}}>
         <Image source={{
@@ -97,7 +102,7 @@ export default function Ingredient(props) {
   ))}
 </BottomSheet>
     </Card>
-      
+    </TouchableOpacity>
   );
 }
 

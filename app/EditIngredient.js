@@ -18,8 +18,6 @@ export default function EditIngredient(props) {
   const navigation = useNavigation();
   const route = useRoute();
   const ingredientId = route.params?.ingredientId;
-  console.log(ingredientId)
-
   const handleImageSelect = async () => {
     // Ask for permission to access the device's media library
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -43,6 +41,62 @@ export default function EditIngredient(props) {
     }
   };
   
+  useEffect(() => {
+    if (ingredientId) {
+      fetchIngredient(ingredientId);
+    }
+  }, [ingredientId]);
+
+  const saveIngredient = (ingredient, ingredientId) => {
+    const db = SQLite.openDatabase('barCart.db');
+  
+    db.transaction((tx) => {
+      tx.executeSql(
+        'UPDATE ingredients SET name = ?, description = ?, type = ?, quantity = ?, unit = ?, price = ? WHERE id = ?',
+        [ingredient.name, ingredient.description, ingredient.category, ingredient.quantity, ingredient.unit, ingredient.price, ingredientId],
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) {
+            console.log('Ingredient updated successfully');
+            navigation.replace('LiquorCabinet');
+          } else {
+            console.log('No ingredient found with the specified ID');
+          }
+        },
+        (_, error) => {
+          // Handle any error that occurred during the query
+          console.error(error);
+        }
+      );
+    });
+  };
+  
+  const fetchIngredient = (id) => {
+    const db = SQLite.openDatabase('barCart.db');
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM ingredients WHERE id = ?',
+        [id],
+        (_, { rows }) => {
+          const ingredient = rows.item(0);
+          setName(ingredient.name);
+          setDescription(ingredient.description);
+          setCategory(ingredient.category);
+          setQuantity(String(ingredient.quantity));
+          setUnit(ingredient.unit);
+          setPrice(String(ingredient.price));
+          setInStock(ingredient.inStock)
+
+        },
+        (_, error) => {
+          
+          
+        }
+      );
+      
+    });
+    
+  };
   
   const handleSubmit = () => {
     const ingredient = {
@@ -55,7 +109,7 @@ export default function EditIngredient(props) {
       inStock: true,
     };
   
-    addIngredient(ingredient);
+    saveIngredient(ingredient, ingredientId);
   };
 
 
@@ -73,8 +127,7 @@ export default function EditIngredient(props) {
   const [quantity, setQuantity] = useState('');
   const [unit, setUnit] = useState('');
   const [price, setPrice] = useState('');
-
-
+  const [inStock, setInStock] = useState(true);
 
 
 
@@ -92,7 +145,7 @@ export default function EditIngredient(props) {
   return (
     <View style={styles.container}>
       <View style={styles.background}>
-        <Text style={styles.title}>ADD TO INVENTORY</Text>
+        <Text style={styles.title}>EDIT INGREDIENT</Text>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>NAME</Text>
           <TextInput 
@@ -154,7 +207,7 @@ export default function EditIngredient(props) {
             />
           </View>
             <Button 
-            title="ADD" 
+            title="SAVE" 
             containerStyle={styles.btnContainer} 
             buttonStyle={styles.addBtn} 
             titleStyle={styles.addBtnText} 

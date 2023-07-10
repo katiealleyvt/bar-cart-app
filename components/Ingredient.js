@@ -5,6 +5,7 @@ import { SafeAreaView, StyleSheet, View, TextInput, Button, TouchableOpacity, Im
 import { Card, ListItem, Icon, Badge, Text, BottomSheet } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigation, useRouter } from 'expo-router' ;
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Ingredient(props) {
 
@@ -31,12 +32,16 @@ export default function Ingredient(props) {
       title: stockOption,
       onPress: () => markStock(!props.stock, props.id),
     },
-    
     {
       title: 'Cancel',
       onPress: () => setOptionsShow(false),
     },
+    
   ]
+
+  
+
+
   showOptions = () => {
     setOptionsShow(true);
   };
@@ -70,9 +75,10 @@ export default function Ingredient(props) {
       
       <View style={styles.row}>
         <View style={{display: 'flex', flexDirection: 'row'}}>
-        <Image source={{
+        {props.image == "" ? <Image source={{
           uri: 'https://reactnative.dev/img/tiny_logo.png',
-        }} style={styles.image}/>
+        }} style={styles.image}/> : <Image source={{ uri: props.image }} style={styles.image} />}
+        
 
         <View style={{marginLeft: 15, display: 'flex', flexDirection: 'column'}}>
           

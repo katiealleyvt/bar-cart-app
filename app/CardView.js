@@ -16,6 +16,7 @@ export default function CardView(props) {
 
   const [ingredient, setIngredient] = React.useState({
     description: "",
+    img: "",
     name: "",
     type: "",
     price: 0,
@@ -61,9 +62,9 @@ export default function CardView(props) {
 
   return (
     <Card containerStyle={[styles.card, {backgroundColor: `rgb(255,255,255)`}]}>
-      <Image source={{
+      {ingredient.img == "" ? <Image source={{
           uri: 'https://reactnative.dev/img/tiny_logo.png',
-        }} style={styles.image}/>
+        }} style={styles.image}/> : <Image source={{ uri: ingredient.img }} style={styles.image} />}
       <View style={styles.row}>
         <View style={{display: 'flex', flexDirection: 'row'}}>
         

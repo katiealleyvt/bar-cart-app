@@ -14,7 +14,7 @@ import { ListItemBase } from 'react-native-elements/dist/list/ListItemBase';
 export default function EditIngredient(props) {
 
   
-  const [imageUri, setImageUri] = useState(null);
+  
   const navigation = useNavigation();
   const route = useRoute();
   const ingredientId = route.params?.ingredientId;
@@ -41,6 +41,25 @@ export default function EditIngredient(props) {
     }
   };
   
+
+  //Image Pick
+
+  const [imageUri, setImageUri] = useState(null);
+
+  const addImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
   useEffect(() => {
     if (ingredientId) {
       fetchIngredient(ingredientId);
@@ -52,8 +71,8 @@ export default function EditIngredient(props) {
   
     db.transaction((tx) => {
       tx.executeSql(
-        'UPDATE ingredients SET name = ?, description = ?, type = ?, quantity = ?, unit = ?, price = ? WHERE id = ?',
-        [ingredient.name, ingredient.description, ingredient.category, ingredient.quantity, ingredient.unit, ingredient.price, ingredientId],
+        'UPDATE ingredients SET name = ?, description = ?, img = ?, type = ?, quantity = ?, unit = ?, price = ? WHERE id = ?',
+        [ingredient.name, ingredient.description, ingredient.image, ingredient.category, ingredient.quantity, ingredient.unit, ingredient.price, ingredientId],
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) {
             console.log('Ingredient updated successfully');
@@ -86,6 +105,7 @@ export default function EditIngredient(props) {
           setUnit(ingredient.unit);
           setPrice(String(ingredient.price));
           setInStock(ingredient.inStock)
+          setImageUri(ingredient.img)
 
         },
         (_, error) => {
@@ -102,13 +122,14 @@ export default function EditIngredient(props) {
     const ingredient = {
       name: name,
       description: description,
+      image: imageUri,
       category: category,
       quantity: quantity,
       unit: unit,
       price: price,
       inStock: true,
     };
-  
+    console.log(ingredient.image)
     saveIngredient(ingredient, ingredientId);
   };
 
@@ -139,6 +160,9 @@ export default function EditIngredient(props) {
     else{
       setUnit(item.unit);
     }
+    
+  }
+  const handleBack = () => {
     
   }
 
@@ -199,6 +223,7 @@ export default function EditIngredient(props) {
         <View style={{flexDirection: 'row'}}>
           <View>
           <Text style={styles.label}>Price</Text>
+          <Button title={imageUri != "" ? "Update Image" : "Add Image"} onPress={addImage} />
             <TextInput 
             style={styles.input}
             value={price}
@@ -212,6 +237,14 @@ export default function EditIngredient(props) {
             buttonStyle={styles.addBtn} 
             titleStyle={styles.addBtnText} 
             onPress={handleSubmit}/>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+          <Button 
+            title="Back" 
+            containerStyle={styles.btnContainer} 
+            buttonStyle={styles.addBtn} 
+            titleStyle={styles.addBtnText} 
+            onPress={handleBack}/>
           </View>
       </View>
     </View>

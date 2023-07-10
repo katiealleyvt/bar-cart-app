@@ -34,6 +34,7 @@ export default function LiquorCabinet() {
             // Transform the row data into the required format for your component
             const ingredient = {
               id: row.id,
+              image: row.img,
               name: row.name,
               type: row.type,
               description: row.description, // adjust this according to your database structure
@@ -167,6 +168,7 @@ const deleteIngredient = (id) => {
             id={item.id}
             name={item.name} 
             type={item.type} 
+            image={item.image}
             liquorType={item.liquorType}
             volume={item.volume} 
             price={item.price}

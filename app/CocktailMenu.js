@@ -6,14 +6,37 @@ import { Card, ListItem, Icon, Badge, Header, SearchBar } from 'react-native-ele
 import React, { useState, useEffect } from 'react';
 import { Link, useRouter } from 'expo-router';
 
+import Cocktail from '../components/Cocktail';
 import PageTab from '../components/PageTab';
 import FilterTab from '../components/FilterTab';
+import Form from './CocktailForm';
+
 
 export default function CocktailMenu() {
 
   return (
-    <View style={styles.container}>
-    </View>
+    <SafeAreaView>
+        {showForm ? 
+        <Form hideIngredientForm={hideIngredientForm}/> : 
+        <View>
+          <FilterTab 
+          filterData={filterData} 
+          sortInStock={sortInStock} 
+          showSettingsIcon={false}
+          showIngredientForm={showIngredientForm}
+          ingredients={ingredients}/>
+        <ScrollView style={styles.scrollView}>
+          {sorted.map((item, index) => (
+            <Cocktail />
+            
+      ))}
+        <View style={{height: 620, backgroundColor: '#201e1f'}}></View>
+        </ScrollView>
+          </View>}
+        
+      
+        
+    </SafeAreaView>
     
   );
 }
